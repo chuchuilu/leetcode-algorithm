@@ -1,50 +1,56 @@
-#include <iostream>
-#include <memory>
+#include<iostream>
+
 
 template<typename T>
-class shared_ptr {
+class Shared_ptr{
 public:
-    shared_ptr(T* ptr = nullptr): _ptr(ptr), _pcount(new int(1)) {}
-
-    shared_ptr(const shared_ptr& sp): _ptr(sp._ptr), _pcount(sp._pcount) {
-        ++(*_pcount);
+    Shared_ptr(T* sp = nullptr): _ptr(sp), _pcount(new int(sp ? 1: 0)){}
+    Shared_ptr(const Shared_ptr& sp): _ptr(sp._ptr), _pcount(sp._pcount){
+        if (_ptr)
+        {
+            ++(*_pcount);
+        }
+        
     }
 
-    shared_ptr& operator=(const shared_ptr& sp){
+    Shared_ptr& operator=(const Shared_ptr&sp){
         if (this != &sp)
         {
-            if (_pcount&&--(*_pcount) == 0)
+            if (_pcount&& --*(_pcount) == 0)
             {
                 delete _ptr;
                 delete _pcount;
             }
-            _ptr = sp._ptr;
             _pcount = sp._pcount;
-            ++(*_pcount);
-            
+            _ptr = sp._ptr;
+            if (_ptr)
+            {
+                ++(*_pcount);
+            }
         }
         return *this;
     }
 
-    T& operator*(){
+    
+    T& operator*() const{
         return *_ptr;
     }
 
-    T* operator->(){
-        return this -> _ptr;
+    T* operator->() const{
+        return _ptr;
+    }
+
+    int use_count() const{
+        return *_pcount;
     }
 
 
-    ~shared_ptr(){
-        if (--(*_pcount) == 0)
+    ~Shared_ptr(){
+        if (_pcount && --(*_pcount) == 0)
         {
             delete _ptr;
             delete _pcount;
         }
-    }
-
-    int use_cout() const {
-        return *_pcount;
     }
 
 
@@ -52,16 +58,20 @@ public:
 private:
     T* _ptr;
     int* _pcount;
-    
+
 };
 
 
 int main(){
-    shared_ptr<int> sp(new int(10));
-    shared_ptr<int> sp2(sp);
-    std::cout << *sp << std::endl;
-    std::cout << *sp2 << std::endl;
-    std::cout << sp.use_cout() << std::endl;
+
+    Shared_ptr<int>sp(new int(5));
+    Shared_ptr<int>sp1(sp);
+    Shared_ptr<int>sp3;
+    sp3 = sp;
+    std::cout << sp.use_count() << std::endl;
+    std::cout << sp3.use_count() << std::endl;
+
+
 
     return 0;
 }

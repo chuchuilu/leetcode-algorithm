@@ -1,76 +1,86 @@
 #include<iostream>
-#include<memory>
-
-
 
 template<typename T>
-class shared_ptr{
+class Unique_ptr{
 public:
-    shared_ptr(T* ptr = nullptr): _ptr(ptr), _pcount(new int(ptr? 1: 0)){}
-    
-    shared_ptr(const shared_ptr &sp): _ptr(sp._ptr), _pcount(sp._pcount){
-        if(_ptr){
-            (*_pcount) ++;
-        }
+    // 构造函数
+    explicit Unique_ptr(T* ptr = nullptr): _ptr(ptr){}
 
+    // 禁用拷贝构造
+    Unique_ptr(const Unique_ptr&) = delete;
+
+    // 禁用拷贝赋值
+    Unique_ptr& operator=(const Unique_ptr& up) = delete;
+
+    // 移动构造函数
+    Unique_ptr(Unique_ptr&& up) noexcept: _ptr(up._ptr){
+        up._ptr = nullptr;
     }
 
-    shared_ptr& operator=(const shared_ptr &sp){
-        if (this != &sp){
-            if (_pcount&& --(*_pcount) == 0 )
-            {
-                delete _ptr;
-                delete _pcount;
-            }
-            _ptr = sp._ptr;
-            _pcount = sp._pcount;
-            if (_ptr)
-            {
-                ++(*_pcount);
-            }
-            
-
+    // 移动赋值
+    Unique_ptr& operator=(Unique_ptr&& up) noexcept{
+        if (this != &up)
+        {
+            delete _ptr;
+            _ptr = up._ptr;
+            up._ptr = nullptr;
         }
         return *this;
     }
 
-    T& operator*(){
+    // 解引用
+    T& operator*() const {
         return *_ptr;
     }
 
-    T* operator->(){
+    // 成员操作
+    T* operator->() const{
         return this -> _ptr;
     }
 
-    int usecount() const{
-        return *_pcount;
+    // 返回托管对象
+    T* get() const {
+        return _ptr;
     }
 
-    ~shared_ptr(){
-        if (_ptr && --(*_pcount) == 0)
-        {
-            delete _ptr;
-            delete _pcount;
-        }
-        
+    // 释放所有权
+    T* release(){
+        T* temp = _ptr;
+        _ptr = nullptr;
+        return temp;
     }
 
+    //重置托管对象
+    void reset (T* ptr = nullptr){
+        delete _ptr;
+        _ptr = ptr;
+    }
 
+    ~Unique_ptr(){
+        delete _ptr;
+    }
+    
 
 private:
     T* _ptr;
-    int* _pcount;
 };
 
-
-
 int main(){
-    shared_ptr<int>sp(new int(100));
-    shared_ptr<int>sp2(sp);
-    shared_ptr<int>sp3;
-    sp3 = sp;
-    std::cout << sp.usecount() << std::endl;
-    std::cout << sp3.usecount() << std::endl;
+    // 创建一个Unique_ptr
+    Unique_ptr<int> up(new int(100));
+    std::cout << *up << std::endl;
+
+    // 转移所有权
+    Unique_ptr<int> up2 = std::move(up);
+
+
+    // reset
+    up2.reset(new int(200));
+    
+    // release
+    int *p = up2.release();
+    
+    delete p;
 
 
     return 0;
