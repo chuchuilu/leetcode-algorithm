@@ -1,32 +1,33 @@
 #include<iostream>
 #include<vector>
+
 using namespace std;
 
-void quic_sort(vector<int> &nums, int l, int r){
-    if(l > r) return;
-    int left = l,right = r;
-    int key = nums[left];
+void quick_sort(vector<int>& nums, int l, int r){
+    if (l >= r) return;
+    int left = l, right = r;
+    int pvot = nums[left];
     while (left < right)
     {
-        while (left < right && nums[right] >= key) right--;
+        while(left < right && nums[right] >= pvot)  right--;
         nums[left] = nums[right];
-        while (left < right && nums[left] <= key) left++;
+        while(left < right && nums[left] <= pvot)   left++;
         nums[right] = nums[left];
     }
-
-    nums[right] = key;
-    quic_sort(nums, l, right - 1);
-    quic_sort(nums, right + 1, r);
+    nums[left] = pvot;
+    quick_sort(nums, l, right - 1);
+    quick_sort(nums, right + 1, r);
+    
+    
 }
 
 
 int main(){
-    vector<int> nums{1,3,4,6,3,5,9,6,9,84,100000000};
+    vector<int>nums{2,4,7,4,3,5,7,9};
+    quick_sort(nums, 0, nums.size() - 1);
+    for(int num: nums)  cout << num << " ";
 
-    quic_sort(nums, 0, nums.size() - 1);
-    for(auto const &num: nums){
-        cout << num << " ";
-    }
+
 
     return 0;
 }
