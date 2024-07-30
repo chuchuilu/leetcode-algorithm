@@ -11,7 +11,7 @@ private:
     size_t size;
 
     void resize(size_t new_capacity){
-        T* new_data = new T[capacity];
+        T* new_data = new T[new_capacity];
         for(size_t i = 0; i < size; i++){
             new_data[i] = data[i];
         }
