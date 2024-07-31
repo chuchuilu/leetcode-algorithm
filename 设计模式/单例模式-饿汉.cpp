@@ -16,8 +16,8 @@ public:
 private:
     // 涉及创建对象的函数都设置为private
     SingleInsatance() { cout << "SingleInsatance( ) 饿汉" << endl;}
-    SingleInsatance(const SingleInsatance &other) {};
-    SingleInsatance& operator=(const SingleInsatance& other){return *this;};
+    SingleInsatance(const SingleInsatance &other) {} = delete;
+    SingleInsatance& operator=(const SingleInsatance& other) = delete;
 
 
 };
