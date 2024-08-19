@@ -60,6 +60,30 @@ public:
             }
         }
     }
+
+        // 岛屿数量 bfs 陆地‘1’ 水 ‘0’
+    void bfs(vector<vector<char>>&grid, int i, int j){
+        int m = grid.size();
+        int n = grid[0].size();
+        queue<pair<int, int>>q;
+        q.push({i, j});
+        grid[i][j] = '0';
+        vector<pair<int, int>>directions{{1,0},{-1,0},{0,1},{0,-1}};
+        while (!q.empty())
+        {
+                auto [x, y] = q.front();
+                q.pop();
+                for(int k = 0; k < 4; k++){
+                    int dx = x + directions[k].first;
+                    int dy = y + directions[k].second;
+                    if(dx >= 0 && dx < m && dy >= 0 && dy < n && grid[dx][dy] == '1'){
+                        grid[dx][dy] = '0';
+                        q.push({dx, dy});
+                    }
+                }
+        }
+        
+    }
 };
 
 

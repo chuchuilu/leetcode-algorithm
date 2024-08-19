@@ -13,7 +13,7 @@ vector<int> maxSlidingWindows(vector<int>& nums. int k){
         while(!dq.empty() && nums[i] >= nums[dq.back()]){
             dq.pop_back();
         }
-        dq.pop_back(i);
+        dq.push_back(i);
         while(i - dq.front() >= k)  dq.pop_front();
         if(i >= k - 1){
             ans.push_back(nums[dq.front()]);
