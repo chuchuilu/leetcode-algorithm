@@ -50,14 +50,17 @@ void inorderTraversalIterative(TreeNode* root){
     TreeNode* cur = root;
     while (cur != nullptr || !stk.empty())
     {
+        // step1.遍历左子树 并将节点压入栈中
         while (cur != nullptr)
         {
             stk.push(cur);
             cur = cur -> left;
         }
+        // step2.处理栈顶部节点，并将节点压入栈中
         cur = stk.top();
         stk.pop();
         cout << cur -> val << " ";
+        //step3.转向右子树迭代
         cur = cur -> right;
     }
 }
