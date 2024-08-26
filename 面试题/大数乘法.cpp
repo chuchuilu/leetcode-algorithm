@@ -31,32 +31,65 @@ string multiply(string num1, string num2){
 }
 
 // 大数除法
-string divide(string num1, string num2){
-    if(num1 == "0") return "0";
-    if(num2 == "0") return "error";
+std::string divide(std::string num1, std::string num2) {
+    if (num2 == "0") return "error"; // 除数不能为0
+    if (num1 == "0") return "0"; // 被除数为0，结果为0
 
     int n1 = num1.size();
     int n2 = num2.size();
-    vector<int> res(n1, 0);
+    
+    if (n1 < n2 || (n1 == n2 && num1 < num2)) return "0"; // 被除数小于除数，商为0
 
-    for(int i = 0; i < n1; i++){
-        int j = 0;
-        while(j < n2){
-            if(num1[i] == num2[j]){
-                res[i] = 1;
-                break;
+    std::string quotient;
+    std::string remainder;
+
+    // 从高位到低位遍历被除数
+    for (int i = 0; i < n1; ++i) {
+        remainder.push_back(num1[i]);
+        
+        // 移除余数的前导零
+        while (remainder.size() > 1 && remainder[0] == '0') {
+            remainder.erase(0, 1);
+        }
+
+        // 计算当前位的商
+        int count = 0;
+        while (remainder.size() > n2 || (remainder.size() == n2 && remainder >= num2)) {
+            int len = num2.size();
+            std::string temp = remainder.substr(0, len);
+            if (temp < num2) {
+                len++;
+                temp = remainder.substr(0, len);
             }
-            j++;
+            
+            // 模拟大数减法
+            int carry = 0;
+            for (int j = len - 1, k = num2.size() - 1; k >= 0; --j, --k) {
+                int sub = (remainder[j] - '0') - (num2[k] - '0') - carry;
+                if (sub < 0) {
+                    sub += 10;
+                    carry = 1;
+                } else {
+                    carry = 0;
+                }
+                remainder[j] = sub + '0';
+            }
+            // 清除前导零
+            while (remainder.size() > 1 && remainder[0] == '0') {
+                remainder.erase(0, 1);
+            }
+
+            count++;
         }
+        quotient.push_back(count + '0');
     }
 
-    string product;
-    for(int num: res){
-        if(!(product.empty() && num == 0)){
-            product.push_back(num + '0');
-        }
+    // 移除商的前导零
+    while (quotient.size() > 1 && quotient[0] == '0') {
+        quotient.erase(0, 1);
     }
-    return product.empty() ? "0" : product;
+
+    return quotient;
 }
 
 
@@ -66,6 +99,9 @@ int main(){
     string num1 = "123";
     string num2 = "456";
     cout << multiply(num1, num2) << endl;
+    std::string numd1 = "123456789";
+    std::string numd2 = "123";
+    std::cout << divide(numd1, numd2) << std::endl; // 输出: 1003713
 
 
     return 0;
