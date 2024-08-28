@@ -33,6 +33,17 @@ int minDepth(TreeNode* root) {
     return depth;
 }
 
+int minDepthRecurisive(TreeNode* root){
+    if(root == nullptr) return 0;
+    if(root -> left == nullptr){
+        return minDepth(root -> right) + 1;
+    }
+
+    if(root -> right)   return minDepth(root -> left) + 1;
+
+    return 1 + min(minDepth(root -> right), minDepth(root -> left));
+}
+
 int main() {
     TreeNode* root = new TreeNode(1);
     root->left = new TreeNode(2);
