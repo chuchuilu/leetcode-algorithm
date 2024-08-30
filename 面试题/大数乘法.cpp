@@ -14,10 +14,10 @@ string multiply(string num1, string num2){
     for(int i = n1 - 1; i >= 0; i--){
         for(int j = n2 - 1; j >=0; j--){
             int mul = (num1[i] - '0') * (num2[j] - '0');
-            int sum = mul + res[i + j + 1];
+            int sum = mul + res[i + j + 1];  // 乘积 加 进位
 
-            res[i + j + 1] = sum % 10;
-            res[i + j] += sum / 10;
+            res[i + j + 1] = sum % 10;  // 处理结尾
+            res[i + j] += sum / 10;     // 处理进位
         }
     }
 

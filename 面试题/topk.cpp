@@ -5,7 +5,7 @@ public:
         int l = left, r = right;
         int pvot = nums[l];
         while(l < r){
-            while(l < r&& nums[r] <= pvot)  r--;
+            while(l < r && nums[r] <= pvot)  r--;
             nums[l] = nums[r];
             while(l < r && nums[l] >= pvot) l++;
             nums[r] = nums[l];
