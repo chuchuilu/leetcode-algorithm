@@ -13,14 +13,16 @@ public:
 };
 int dfs(TreeNode*);
 
-int maxDepth(TreeNode* root){
-    return dfs(root);
-}
-
 int dfs(TreeNode* root){
     if(root == nullptr) return 0;
     return max(dfs(root -> left), dfs(root -> right)) + 1;
 }
+
+int maxDepth(TreeNode* root){
+    return dfs(root);
+}
+
+
 
 int main() {
     // 构建示例二叉树
