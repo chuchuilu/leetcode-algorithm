@@ -3,6 +3,6 @@
 # a after
 # dd delete a line
 # cc delete a line and insert
-# e jump to a word head
-# b jump to a word tail
+# e jump to a word tail
+# b jump to a word head
 # w jump to next word head
